@@ -1,11 +1,10 @@
 from contacts.record import Record
-from contacts.address_book import AddressBook
 from contacts.user_interfaces import UserInterface
 from contacts.address_book_storage import AddressBookStorage
 
 
 class AddressBookManager:
-    def __init__(self, storage:AddressBookStorage, user_interface: UserInterface) -> None:
+    def __init__(self, storage: AddressBookStorage, user_interface: UserInterface) -> None:
         self.address_book = storage.load()
 
         self.user_interface = user_interface
@@ -65,7 +64,7 @@ class AddressBookManager:
 
             try:
                 setattr(record, field, value)
-            except ValueError: 
+            except ValueError:
                 self.user_interface.error(f'Incorrect value for {field}')
             else:
                 break
@@ -75,7 +74,7 @@ class AddressBookManager:
         self.user_interface.contact_changed(record)
 
         self.run()
-    
+
     def remove_contact(self):
         record = self.user_interface.select_contact(
             self.address_book,
@@ -90,7 +89,6 @@ class AddressBookManager:
         self.user_interface.contact_removed()
 
         self.run()
-        
 
     def get_birthdays(self):
         self.user_interface.show_birthdays(
@@ -98,7 +96,7 @@ class AddressBookManager:
         )
 
         self.run()
-        
+
     def exit(self):
         pass
 

@@ -1,6 +1,6 @@
 from collections import UserDict, defaultdict
 from contacts.record import Record
-from datetime import datetime, timedelta
+from datetime import datetime
 import pickle
 import calendar
 

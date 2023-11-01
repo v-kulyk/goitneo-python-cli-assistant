@@ -76,7 +76,7 @@ class CommandLineInterface(UserInterface):
                     user_input = input(f"[Contacts] Please specify {attr}:\n")
                     setattr(record, attr, user_input)
                 except ValueError:
-                    self.error("Incorrect value for {attr}")
+                    self.error(f"Incorrect value for {attr}")
                 else:
                     break
             
