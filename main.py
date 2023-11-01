@@ -1,10 +1,14 @@
 import sys
 from pathlib import Path
-
 from contacts.address_book_manager import AddressBookManager
 from contacts.address_book import AddressBook
 from contacts.user_interfaces import CommandLineInterface
 from contacts.address_book_storage import AddressBookStorage
+
+from notes.notes_manager import NotesManager
+from notes.notes_book import NotesBook
+from notes.user_interfaces import CommandLineInterface as NotesCommandLineInterface
+
 
 from notes.notes_manager import NotesManager
 from notes.notes_book import NotesBook
