@@ -10,10 +10,10 @@ class Record:
         self._first_name = None
         self._last_name = None
         self._birthday = None
+        self._address = None
         self._emails = []
         self._phones = []
         
-    @property
     def id(self):
         return self.__id
 
@@ -23,6 +23,9 @@ class Record:
 
     @first_name.setter
     def first_name(self, value: str):
+        if not value:
+            raise ValueError
+
         self._first_name = value
 
     @property
@@ -31,22 +34,35 @@ class Record:
 
     @last_name.setter
     def last_name(self, value):
-        pass
+        self._last_name = value
 
     @property
-    def birthday(self):
+    def birthday(self) -> datetime:
         return self._birthday
 
-    @last_name.setter
-    def birthday(self, value: datetime):
-        self._birthday = value
+    @birthday.setter
+    def birthday(self, value: str):
+        self._birthday = datetime.strptime(value, "%d.%m.%Y")
+        
+    @property
+    def address(self) -> str:
+        return self._address
+    
+    @address.setter
+    def address(self, value:str):
+        self._address = value
 
     @property
     def emails(self) -> list:
         return self._emails.copy()
 
-    @email
-    def add_email(self, email: str):
+    @emails.setter
+    def emails(self, value: str):
+        if not value:
+            return
+        if not email(value):
+            raise ValueError
+
         self._emails.append(email)
 
     def remove_email(self, email: str):
@@ -56,9 +72,28 @@ class Record:
     def phones(self) -> list:
         return self._phones.copy()
 
-    @phone
-    def add_phone(self, phone: str):
+    @phones.setter
+    def phones(self, value: str):
+        if not value:
+            return
+        if not phone(value):
+            raise ValueError
+
         self._phones.append(phone)
 
-    def remove_email(self, phone: str):
+    def remove_phone(self, phone: str):
         self._phones.remove(phone)
+        
+    def get_writable_attributes(self):
+        attributes = dir(self) #get all attributes (properties and methods) of the instance
+
+        #get only public properties
+        writable_attributes = []
+        
+        for attr in attributes:
+            if callable(getattr(self, attr)) or attr.startswith("_"):
+                continue
+
+            writable_attributes.append(attr)
+
+        return writable_attributes
