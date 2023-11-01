@@ -1,20 +1,21 @@
 from collections import UserDict, defaultdict
 from contacts.record import Record
-from datetime import datetime, timedelta
+from datetime import datetime
+import pickle
 import calendar
 
 
 class AddressBook(UserDict):
     def add_record(self, record: Record):
-        self.data[record.id] = record
+        self.data[record.id()] = record
 
     def find(self, name: str):
         raise NotImplemented
 
-    def delete(self, name: str):
-        raise NotImplemented
+    def delete(self, id):
+        self.data.pop(id)
 
-    def get_birthdays(self):
+    def get_birthdays(self, days):
         today = datetime.today().date()
 
         output_data = defaultdict(list)
@@ -33,12 +34,8 @@ class AddressBook(UserDict):
 
             delta_to_celebration = celebration_date - today
 
-            if delta_to_celebration.days >= 7:
+            if delta_to_celebration.days >= days:
                 continue
-
-            if celebration_date.weekday() in [5, 6]:
-                celebration_date = celebration_date + \
-                    timedelta(days=7 - celebration_date.weekday())
 
             output_data[celebration_date.weekday()].append(name)
             sorted(output_data)
