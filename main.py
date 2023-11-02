@@ -4,7 +4,6 @@ from contacts.address_book_manager import AddressBookManager
 from contacts.address_book import AddressBook
 from contacts.user_interfaces import CommandLineInterface
 from contacts.address_book_storage import AddressBookStorage
-from contacts.demo import fill_demo_data
 
 from notes.notes_manager import NotesManager
 from notes.notes_book import NotesBook
@@ -23,7 +22,13 @@ def main():
             CommandLineInterface(),
         )
 
-    manager.run()
+    try:
+        manager.run()
+    except KeyboardInterrupt:
+        pass
+
+    print("Bye.")
+
 
 
 if __name__ == '__main__':

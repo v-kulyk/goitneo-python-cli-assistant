@@ -4,6 +4,16 @@ from contacts.address_book_storage import AddressBookStorage
 
 
 class AddressBookManager:
+    methods = {
+        'find_contact': 'Search',
+        'list_contacts': 'List all contacts',
+        'add_contact': "New contact",
+        'change_contact': "Edit contact",
+        'remove_contact': "Delete contact",
+        'get_birthdays': "Get birthdays",
+        'exit': 'Exit',
+    }
+
     def __init__(self, storage: AddressBookStorage, user_interface: UserInterface) -> None:
         self.address_book = storage.load()
 
@@ -11,21 +21,24 @@ class AddressBookManager:
 
         self.storage = storage
 
+        self.user_interface.clear()
 
     def run(self):
-        methods_list = self._get_public_methods_list()
-
         method_idx = self.user_interface.choose(
-            methods_list,
+            list(AddressBookManager.methods.values()),
             "[Contacts]: what do you want to do ?",
             "Please specify a valid action"
         )
+        
+        method_name = list(AddressBookManager.methods.keys())[method_idx]
 
-        method = getattr(self, methods_list[method_idx])
+        method = getattr(self, method_name)
 
         method()
 
     def list_contacts(self):
+        self.user_interface.clear()
+
         records = self.address_book.data.values()
 
         self.user_interface.show_records(records)
@@ -33,6 +46,8 @@ class AddressBookManager:
         self.run()
 
     def add_contact(self):
+        self.user_interface.clear()
+
         record = self.user_interface.new_contact()
 
         self.address_book.add_record(record=record)
@@ -44,6 +59,8 @@ class AddressBookManager:
         self.run()
 
     def find_contact(self) -> Record:
+        self.user_interface.clear()
+
         search_request = self.user_interface.get_search_request()
 
         records = self.address_book.find(search_request)
@@ -53,27 +70,30 @@ class AddressBookManager:
         self.run()
 
     def change_contact(self):
-        record = self.user_interface.select_contact(
-            self.address_book,
-            "Which contact do you want to change?",
-            "Please select an existing contact."
-        )
+        self.user_interface.clear()
 
-        field = self.user_interface.choose(
-            record.get_writable_attributes(),
+        record = self.user_interface.select_contact(self.address_book)
+
+        attrs_dict = Record.fillable_fields
+
+        field_idx = self.user_interface.choose(
+            list(attrs_dict.values()),
             "Which field do you want to change?",
             "Please select a valid field."
         )
 
+        field = list(attrs_dict.keys())[field_idx]
+        label = list(attrs_dict.values())[field_idx]
+
         while True:
             value = self.user_interface.input(
-                f"Please specify new value for {field}"
+                f"[Change contact] Please specify new value for {label}"
             )
 
             try:
                 setattr(record, field, value)
             except ValueError:
-                self.user_interface.error(f'Incorrect value for {field}')
+                self.user_interface.error(f'Incorrect value for {label}')
             else:
                 break
 
@@ -84,13 +104,11 @@ class AddressBookManager:
         self.run()
 
     def remove_contact(self):
-        record = self.user_interface.select_contact(
-            self.address_book,
-            "Which contact do you want to remove?",
-            "Please select an existing contact."
-        )
+        self.user_interface.clear()
 
-        self.address_book.delete(record.id())
+        record = self.user_interface.select_contact(self.address_book)
+
+        self.address_book.delete(record.id)
 
         self.storage.save(address_book=self.address_book)
 
@@ -107,6 +125,3 @@ class AddressBookManager:
 
     def exit(self):
         pass
-
-    def _get_public_methods_list(self):
-        return [func for func in dir(self) if callable(getattr(self, func)) and not func.startswith("_") and func != "run"]
