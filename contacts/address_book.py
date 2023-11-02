@@ -1,16 +1,19 @@
 from collections import UserDict, defaultdict
 from contacts.record import Record
-from datetime import datetime
-import pickle
+from contacts.search_request import SearchRequest
+from datetime import datetime, timedelta
+
 import calendar
 
 
 class AddressBook(UserDict):
     def add_record(self, record: Record):
-        self.data[record.id()] = record
+        self.data[record.id] = record
 
-    def find(self, name: str):
-        raise NotImplemented
+    def find(self, search_request: SearchRequest) -> list:
+        records = list(
+            filter(lambda r: search_request.is_found(r), self.data.values()))
+        return search_request.sort(records)
 
     def delete(self, id):
         self.data.pop(id)
