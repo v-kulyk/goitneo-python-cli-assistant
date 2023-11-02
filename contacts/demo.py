@@ -21,7 +21,7 @@ def get_random_record(fake) -> Record:
     record.last_name = fake.last_name()
 
     if random.random() > 0.3:
-        record.birthday = fake.date_of_birth().strftime('%d.%m.%Y')
+        record.birthday = fake.date_of_birth().strftime(Record.birthday_format)
 
     record.emails = fake.email()
 
