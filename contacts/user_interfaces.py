@@ -103,7 +103,7 @@ class CommandLineInterface(UserInterface):
 
         return address_book[ids[name_idx]]
 
-    def contact_changed(self, record: Record):
+    def item_changed(self, record: Record):
         print(f"Contact {record.full_name} was changed\n")
 
     def contact_removed(self):
