@@ -1,8 +1,24 @@
 from datetime import datetime
-from contacts.validators import email,phone
+from contacts.validators import email, phone
 
 
 class Record:
+    searchable_fields = {
+        '': 'Everywhere',
+        'full_name': 'Full name',
+        'first_name': 'First name',
+        'last_name': 'Last name',
+        'emails': 'Emails',
+        'phones': 'Phones',
+    }
+
+    orderable_fields = {
+        'full_name': 'Full name',
+        'first_name': 'First name',
+        'last_name': 'Last name',
+        'id': 'ID',
+    }
+
     def __init__(self) -> None:
         self.__id = id(self)
         self.__created_at = datetime.now()
@@ -13,7 +29,22 @@ class Record:
         self._address = None
         self._emails = []
         self._phones = []
-        
+
+    def __str__(self) -> str:
+        rows = [f"Name: {self.full_name}"]
+
+        if self._birthday:
+            rows.append(f"Birthday: {self._birthday.strftime('%d.%m.%Y')}")
+
+        if self._emails:
+            rows.append("Emails: " + ', '.join(self._emails))
+
+        if self._phones:
+            rows.append("Phones: " + ', '.join(self._phones))
+
+        return '\n'.join(rows)
+
+    @property
     def id(self):
         return self.__id
 
@@ -37,19 +68,23 @@ class Record:
         self._last_name = value
 
     @property
+    def full_name(self) -> str:
+        return self._first_name + ' ' + self._last_name
+
+    @property
     def birthday(self) -> datetime:
         return self._birthday
 
     @birthday.setter
     def birthday(self, value: str):
         self._birthday = datetime.strptime(value, "%d.%m.%Y")
-        
+
     @property
     def address(self) -> str:
         return self._address
-    
+
     @address.setter
-    def address(self, value:str):
+    def address(self, value: str):
         self._address = value
 
     @property
@@ -63,7 +98,7 @@ class Record:
         if not email(value):
             raise ValueError
 
-        self._emails.append(email)
+        self._emails.append(value)
 
     def remove_email(self, email: str):
         self._emails.remove(email)
@@ -79,17 +114,18 @@ class Record:
         if not phone(value):
             raise ValueError
 
-        self._phones.append(phone)
+        self._phones.append(value)
 
     def remove_phone(self, phone: str):
         self._phones.remove(phone)
-        
-    def get_writable_attributes(self):
-        attributes = dir(self) #get all attributes (properties and methods) of the instance
 
-        #get only public properties
+    def get_writable_attributes(self):
+        # get all attributes (properties and methods) of the instance
+        attributes = dir(self)
+
+        # get only public properties
         writable_attributes = []
-        
+
         for attr in attributes:
             if callable(getattr(self, attr)) or attr.startswith("_"):
                 continue
