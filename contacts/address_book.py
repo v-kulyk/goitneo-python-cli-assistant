@@ -1,9 +1,7 @@
 from collections import UserDict, defaultdict
 from contacts.record import Record
 from contacts.search_request import SearchRequest
-from datetime import datetime, timedelta
-
-import calendar
+from datetime import datetime
 
 
 class AddressBook(UserDict):
@@ -23,11 +21,11 @@ class AddressBook(UserDict):
 
         output_data = defaultdict(list)
 
-        for name in self.data:
-            if not self.data[name].birthday:
+        for record in self.data.values():
+            if not record.birthday:
                 continue
 
-            birthday = self.data[name].birthday.value
+            birthday = record.birthday
 
             celebration_date = birthday.replace(year=today.year)
 
@@ -37,18 +35,11 @@ class AddressBook(UserDict):
 
             delta_to_celebration = celebration_date - today
 
-            if delta_to_celebration.days >= days:
+            if delta_to_celebration.days > days:
                 continue
 
-            output_data[celebration_date.weekday()].append(name)
+            output_data[celebration_date.strftime('%Y-%m-%d')].append(record)
+
             sorted(output_data)
 
-        output = []
-
-        for weekday_index in output_data.keys():
-            day_name = calendar.day_name[weekday_index]
-            celebrator_names = ", ".join(output_data.get(weekday_index))
-
-            output.append(f"{day_name}: {celebrator_names}")
-
-        return output
+        return output_data

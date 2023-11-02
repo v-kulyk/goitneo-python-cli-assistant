@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,date
 from contacts.validators import email, phone
 
 
@@ -10,6 +10,7 @@ class Record:
         'last_name': 'Last name',
         'emails': 'Emails',
         'phones': 'Phones',
+        'address': 'Address',
     }
 
     orderable_fields = {
@@ -17,6 +18,15 @@ class Record:
         'first_name': 'First name',
         'last_name': 'Last name',
         'id': 'ID',
+    }
+
+    fillable_fields = {
+        'first_name': 'First name',
+        'last_name': 'Last name',
+        'birthday': "Date of birth",
+        'emails': 'Emails',
+        'phones': 'Phones',
+        'address': 'Address',
     }
 
     def __init__(self) -> None:
@@ -73,12 +83,12 @@ class Record:
             return self._first_name + ' ' + self._last_name
 
     @property
-    def birthday(self) -> datetime:
+    def birthday(self) -> date:
         return self._birthday
 
     @birthday.setter
     def birthday(self, value: str):
-        self._birthday = datetime.strptime(value, "%d.%m.%Y")
+        self._birthday = datetime.strptime(value, "%d.%m.%Y").date()
 
     @property
     def address(self) -> str:
@@ -120,17 +130,5 @@ class Record:
     def remove_phone(self, phone: str):
         self._phones.remove(phone)
 
-    def get_writable_attributes(self):
-        # get all attributes (properties and methods) of the instance
-        attributes = dir(self)
-
-        # get only public properties
-        writable_attributes = []
-
-        for attr in attributes:
-            if callable(getattr(self, attr)) or attr.startswith("_"):
-                continue
-
-            writable_attributes.append(attr)
-
-        return writable_attributes
+    def get_writable_attributes(self) -> dict:
+        return self.fillable_fields
