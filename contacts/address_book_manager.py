@@ -99,9 +99,11 @@ class AddressBookManager:
         self.run()
 
     def get_birthdays(self):
-        self.user_interface.show_birthdays(
-            self.address_book.get_birthdays()
-        )
+        days = self.user_interface.get_birthdays_interval();
+
+        birthdays = self.address_book.get_birthdays(days)
+        
+        self.user_interface.show_birthdays(birthdays)
 
         self.run()
 

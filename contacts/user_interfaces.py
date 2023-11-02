@@ -2,6 +2,8 @@ from contacts.record import Record
 from contacts.address_book import AddressBook
 from contacts.search_request import SearchRequest
 
+from datetime import datetime
+
 
 class UserInterface:
     def input(self, prompt):
@@ -34,7 +36,9 @@ class UserInterface:
     def show_records(self, records: list):
         raise NotImplemented
 
-    def show_birthdays(self):
+    def get_birthdays_interval(self) -> int:
+
+    def show_birthdays(self, birthdays: dict):
         raise NotImplemented
 
 
@@ -164,4 +168,25 @@ class CommandLineInterface(UserInterface):
 
         for record in records:
             print(record)
+            print('')
+
+    def get_birthdays_interval(self) -> int:
+        while True:
+            days = self.input(
+                '[Birthdays]: please, input the number of days\n')
+
+            if days and days.isnumeric() and int(days) > 0:
+                return int(days)
+
+            print(self.error('Incorrect number of days provided'))
+
+    def show_birthdays(self, birthdays: dict):
+        for date_str, records in birthdays.items():
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            print(date.strftime('%d.%m.%Y (%A)'))
+
+            for record in records:
+                years = date.year - record.birthday.year
+                print(f"{record.full_name} ({years} years)")
+
             print('')
