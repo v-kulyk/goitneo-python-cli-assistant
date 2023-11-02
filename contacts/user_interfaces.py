@@ -7,7 +7,7 @@ class UserInterface:
     def input(self, prompt):
         raise NotImplemented
 
-    def choose(self, choice_options: dict, prompt: str, err_msg: str):
+    def choose(self, choice_options: list, prompt: str, err_msg: str, default=None):
         raise NotImplemented
 
     def error(self, msg: str):
@@ -54,12 +54,15 @@ class CommandLineInterface(UserInterface):
             if not user_input and not default is None:
                 return default
 
-            if user_input.isnumeric():
-                choice_index = int(user_input) - 1
+            if not user_input.isnumeric():
+                self.error(err_msg)
+                continue
 
-                if choice_index >= 0 and choice_index < len(choice_options):
-                    print(choice_options[choice_index])
-                    return choice_index
+            choice_index = int(user_input) - 1
+
+            if choice_index >= 0 and choice_index < len(choice_options):
+                print(choice_options[choice_index])
+                return choice_index
 
             self.error(err_msg)
 

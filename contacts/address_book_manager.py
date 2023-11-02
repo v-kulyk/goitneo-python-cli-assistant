@@ -1,21 +1,16 @@
 from contacts.record import Record
 from contacts.user_interfaces import UserInterface
 from contacts.address_book_storage import AddressBookStorage
-from contacts.demo import fill_demo_data
 
 
 class AddressBookManager:
-    def __init__(self, storage: AddressBookStorage, user_interface: UserInterface, is_demo=False) -> None:
+    def __init__(self, storage: AddressBookStorage, user_interface: UserInterface) -> None:
         self.address_book = storage.load()
 
         self.user_interface = user_interface
 
         self.storage = storage
 
-        self.is_demo = is_demo
-
-        if is_demo:
-            fill_demo_data(self.address_book)
 
     def run(self):
         methods_list = self._get_public_methods_list()

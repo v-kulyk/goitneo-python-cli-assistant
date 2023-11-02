@@ -18,8 +18,10 @@ def main():
         manager = NotesManager(notes_book=NotesBook(),
                                user_interface=NotesCommandLineInterface())
     else:
-        manager = AddressBookManager(AddressBookStorage(
-            'address_book.dat'), CommandLineInterface(), is_demo)
+        manager = AddressBookManager(
+            AddressBookStorage(book_name='adress_book', is_demo=is_demo),
+            CommandLineInterface(),
+        )
 
     manager.run()
 
