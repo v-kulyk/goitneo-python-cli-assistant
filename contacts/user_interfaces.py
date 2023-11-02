@@ -40,6 +40,7 @@ class UserInterface:
         raise NotImplemented
 
     def get_birthdays_interval(self) -> int:
+        pass
 
     def show_birthdays(self, birthdays: dict):
         raise NotImplemented
@@ -187,7 +188,7 @@ class CommandLineInterface(UserInterface):
     def get_birthdays_interval(self) -> int:
         while True:
             days = self.input(
-                '[Birthdays]: please, input the number of days\n')
+                '[Birthdays]: please, input the number of days')
 
             if days and days.isnumeric() and int(days) > 0:
                 return int(days)
@@ -195,6 +196,9 @@ class CommandLineInterface(UserInterface):
             print(self.error('Incorrect number of days provided'))
 
     def show_birthdays(self, birthdays: dict):
+        if not len(birthdays):
+            print('No birthdays found.')
+
         for date_str, records in birthdays.items():
             date = datetime.strptime(date_str, '%Y-%m-%d').date()
             print(date.strftime('%d.%m.%Y (%A)'))

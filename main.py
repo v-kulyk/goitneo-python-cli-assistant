@@ -18,7 +18,7 @@ def main():
                                user_interface=NotesCommandLineInterface())
     else:
         manager = AddressBookManager(
-            AddressBookStorage(book_name='adress_book', is_demo=is_demo),
+            AddressBookStorage(book_name='address_book', is_demo=is_demo),
             CommandLineInterface(),
         )
 

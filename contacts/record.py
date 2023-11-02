@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,date
 from contacts.validators import email, phone
 
 
@@ -82,7 +82,7 @@ class Record:
         return self._first_name + ' ' + self._last_name
 
     @property
-    def birthday(self) -> datetime:
+    def birthday(self) -> date:
         return self._birthday
 
     @birthday.setter
