@@ -87,7 +87,7 @@ class Record:
 
     @birthday.setter
     def birthday(self, value: str):
-        self._birthday = datetime.strptime(value, "%d.%m.%Y")
+        self._birthday = datetime.strptime(value, "%d.%m.%Y").date()
 
     @property
     def address(self) -> str:
