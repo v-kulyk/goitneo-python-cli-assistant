@@ -1,4 +1,4 @@
-from datetime import datetime,date
+from datetime import datetime, date
 from contacts.validators import email, phone
 
 
@@ -29,6 +29,8 @@ class Record:
         'address': 'Address',
     }
 
+    birthday_format = '%d.%m.%Y'
+
     def __init__(self) -> None:
         self.__id = id(self)
         self.__created_at = datetime.now()
@@ -44,7 +46,8 @@ class Record:
         rows = [f"Name: {self.full_name}"]
 
         if self._birthday:
-            rows.append(f"Birthday: {self._birthday.strftime('%d.%m.%Y')}")
+            rows.append(
+                f"Birthday: {self._birthday.strftime(self.birthday_format)}")
 
         if self._emails:
             rows.append("Emails: " + ', '.join(self._emails))
@@ -88,7 +91,7 @@ class Record:
 
     @birthday.setter
     def birthday(self, value: str):
-        self._birthday = datetime.strptime(value, "%d.%m.%Y").date()
+        self._birthday = datetime.strptime(value, self.birthday_format).date()
 
     @property
     def address(self) -> str:
@@ -114,6 +117,16 @@ class Record:
     def remove_email(self, email: str):
         self._emails.remove(email)
 
+    def replace_email(self, old_email: str, new_email: str):
+        idx = self._emails.index(old_email)
+
+        if not old_email or idx < 0:
+            return
+        if not email(new_email):
+            raise ValueError
+
+        self._emails[idx] = new_email
+
     @property
     def phones(self) -> list:
         return self._phones.copy()
@@ -130,5 +143,28 @@ class Record:
     def remove_phone(self, phone: str):
         self._phones.remove(phone)
 
-    def get_writable_attributes(self) -> dict:
-        return self.fillable_fields
+    def replace_phone(self, old_phone: str, new_phone: str):
+        idx = self._phones.index(old_phone)
+
+        if not new_phone or idx < 0:
+            return
+        if not phone(new_phone):
+            raise ValueError
+
+        self._phones[idx] = new_phone
+    
+    # TODO: add validation for new_value
+    def list_field_replace(self, field: str, old_value, new_value):
+        prop_list = getattr(self, '_'+field)
+        idx = prop_list.index(old_value)
+        
+        if not old_value or not new_value or idx < 0:
+            return
+        
+        prop_list[idx] = new_value
+        setattr(self, '_'+field, prop_list)
+    
+    def list_field_delete(self, field: str, value):
+        prop_list = getattr(self, '_'+field)
+        prop_list.remove(value)
+        setattr(self, '_'+field, prop_list)

@@ -18,7 +18,7 @@ class UserInterface:
     def error(self, msg: str):
         raise NotImplemented
 
-    def select_contact(self, address_book: AddressBook):
+    def select_contact(self, records: list) -> Record:
         raise NotImplemented
 
     def new_contact(self) -> Record:
@@ -72,7 +72,8 @@ class CommandLineInterface(UserInterface):
                 self.error(err_msg)
                 continue
 
-            choice_index = int(user_input) - 1 if user_input.isnumeric() else choice_options.index(user_input)
+            choice_index = int(
+                user_input) - 1 if user_input.isnumeric() else choice_options.index(user_input)
 
             if choice_index >= 0 and choice_index < len(choice_options):
                 self.__unset_completer()
@@ -86,13 +87,14 @@ class CommandLineInterface(UserInterface):
         record = Record()  # creating new instance of Record class
 
         # get only public properties
-        writable_attributes = record.get_writable_attributes()
+        writable_attributes = Record.fillable_fields
 
         # for each public property we as user for input
         for field, label in writable_attributes.items():
             while True:
                 try:
-                    user_input = self.input(f"[New contact] Please specify `{label}`:")
+                    user_input = self.input(
+                        f"[New contact] Please specify `{label}`:")
                     setattr(record, field, user_input)
                 except ValueError:
                     self.error(f"Incorrect value for `{label}`")
@@ -105,26 +107,21 @@ class CommandLineInterface(UserInterface):
         print("[ERROR]: " + msg + "\n")
 
     def contact_added(self, record: Record):
-        print(f"[Contacts] Contact {record.full_name} was added to address book.")
+        print(
+            f"[Contacts] Contact {record.full_name} was added to address book.")
 
-    def select_contact(self, address_book: AddressBook):
-        names = []
-
-        ids = []
-
-        for record in address_book.values():
-            names.append(f"{record.full_name}")
-
-            ids.append(record.id)
+    def select_contact(self, records: list) -> Record:
+        names = list(map(lambda r: r.full_name, records))
 
         name_idx = self.choose(
             names, "Select contact:", "Incorrect input, please select existing contact.")
 
-        return address_book[ids[name_idx]]
+        return records[name_idx]
 
 
     def contact_changed(self, record: Record):
-        print(f"Contact {record.full_name} was changed")
+        print(f"Contact was changed:")
+        print(record)
 
 
     def contact_removed(self):
@@ -203,14 +200,14 @@ class CommandLineInterface(UserInterface):
 
         for date_str, records in birthdays.items():
             date = datetime.strptime(date_str, '%Y-%m-%d').date()
-            print(date.strftime('%d.%m.%Y (%A)'))
+            print(date.strftime(Record.birthday_format + ' (%A)'))
 
             for record in records:
                 years = date.year - record.birthday.year
                 print(f"{record.full_name} ({years} years)")
 
             print('')
-            
+
     def __set_completer(self, options: list):
         completer = Completer(options)
 
@@ -220,5 +217,3 @@ class CommandLineInterface(UserInterface):
 
     def __unset_completer(self):
         readline.set_completer(None)
-
-       
