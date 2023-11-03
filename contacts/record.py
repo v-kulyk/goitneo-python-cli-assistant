@@ -82,7 +82,8 @@ class Record:
 
     @property
     def full_name(self) -> str:
-        return self._first_name + ' ' + self._last_name
+        if self._first_name and self._last_name:
+            return self._first_name + ' ' + self._last_name
 
     @property
     def birthday(self) -> date:

@@ -39,9 +39,11 @@ class CommandLineInterface(BaseInterface):
 
         return records[name_idx]
 
+
     def contact_changed(self, record: Record):
         print(f"Contact was changed:")
         print(record)
+
 
     def contact_removed(self):
         print("Contact was removed.")
