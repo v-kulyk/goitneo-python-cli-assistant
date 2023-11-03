@@ -1,48 +1,14 @@
+from common import BaseInterface, SearchRequest
 from notes.note import Note
 from notes.notes_book import NotesBook
 from common.search_request import SearchRequest
 from os import system
-from datetime import datetime
 
-class UserInterface:
-    pass
-class CommandLineInterface(UserInterface):
+
+class CommandLineInterface(BaseInterface):
     def __init__(self, items_title, item_title) -> None:
         self.items_title = items_title
         self.item_title = item_title
-
-    def input(self, prompt):
-        return input(prompt + "\n>")
-
-    def choose(self, choice_options: list, prompt: str, err_msg: str, default=None) -> str:
-        prompt = prompt + "\n"
-
-        self.__set_completer(choice_options)
-
-        while True:
-            for i in range(len(choice_options)):
-                prompt += f"[{i+1}]: {choice_options[i]}\n"
-
-            user_input = self.input(prompt)
-
-            if not user_input and not default is None:
-                self.__unset_completer()
-                return default
-
-            if not user_input.isnumeric() and user_input not in choice_options:
-                self.error(err_msg)
-                continue
-
-            choice_index = int(
-                user_input) - 1 if user_input.isnumeric() else choice_options.index(user_input)
-
-            if choice_index >= 0 and choice_index < len(choice_options):
-                self.__unset_completer()
-                return choice_index
-
-            self.__unset_completer()
-
-            self.error(err_msg)
 
     def new_item(self):
         item = Note()  # creating new instance of Note class
@@ -64,9 +30,6 @@ class CommandLineInterface(UserInterface):
 
         return item
 
-    def error(self, msg: str):
-        print("[ERROR]: " + msg + "\n")
-
     def item_added(self, item: Note):
         print(
             f"[{self.items_title}] {self.item_title} {item.title} was added to {self.items_title}.")
@@ -79,14 +42,13 @@ class CommandLineInterface(UserInterface):
 
         return items[name_idx]
 
-
     def item_changed(self, item: Note):
         print(f"{self.item_title} was changed:")
         print(item)
 
-
     def item_removed(self):
         print("{self.item_title} was removed.")
+
 
     def get_search_request(self):
         search_request = SearchRequest()
@@ -159,6 +121,7 @@ class CommandLineInterface(UserInterface):
 
     def clear(self):
         system('clear')
+
 
     def __set_completer(self, options: list):
         #completer = Completer(options)

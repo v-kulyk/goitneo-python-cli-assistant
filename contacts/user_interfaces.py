@@ -39,20 +39,12 @@ class CommandLineInterface(BaseInterface):
 
         return records[name_idx]
 
-
     def contact_changed(self, record: Record):
         print(f"Contact was changed:")
         print(record)
 
-
     def contact_removed(self):
         print("Contact was removed.")
-
-    def get_search_request(self) -> SearchRequest:
-        return super().get_search_request(
-            searchable_fields=Record.searchable_fields,
-            orderable_fields=Record.orderable_fields
-        )
 
     def get_birthdays_interval(self) -> int:
         while True:
