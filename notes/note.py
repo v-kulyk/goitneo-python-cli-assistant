@@ -1,6 +1,8 @@
 from datetime import datetime
+from common import Item
 
-class Note:
+
+class Note(Item):
     searchable_fields = {
         '': 'Everywhere',
         'title': 'Title',
@@ -17,8 +19,12 @@ class Note:
     fillable_fields = {
         'title': 'Title',
         'description': 'Description',
-        'tags': 'Tags',        
+        'tags': 'Tags',
     }
+
+    validators = {
+    }
+
     def __init__(self) -> None:
         self.__id = id(self)
         self.__created_at = datetime.now()
@@ -30,14 +36,15 @@ class Note:
     def __str__(self) -> str:
         rows = [f"Title: {self._title}"]
 
+        if self._tags:
+            rows.append("Tags: " + ', '.join(self._tags))
+
         if self._description:
             rows.append(f"Description: {self._description}")
 
         if self.__created_at:
-            rows.append(f"Added date: {self.__created_at.strftime('%d.%m.%Y')}")
-
-        if self._tags:
-            rows.append("Tags: " + ', '.join(self._tags))
+            rows.append(
+                f"Added date: {self.__created_at.strftime('%d.%m.%Y')}")
 
         return '\n'.join(rows)
 
@@ -63,7 +70,6 @@ class Note:
     def description(self, value):
         self._description = value
 
-
     @property
     def tags(self) -> list:
         return self._tags.copy()
@@ -82,23 +88,5 @@ class Note:
 
         if not old_tag or idx < 0:
             return
-    
+
         self._tags[idx] = new_tag
-
-
-
-    def list_field_replace(self, field: str, old_value, new_value):
-        prop_list = getattr(self, '_'+field)
-        idx = prop_list.index(old_value)
-        
-        if not old_value or not new_value or idx < 0:
-            return
-        
-        prop_list[idx] = new_value
-        setattr(self, '_'+field, prop_list)
-    
-    
-    def list_field_delete(self, field: str, value):
-        prop_list = getattr(self, '_'+field)
-        prop_list.remove(value)
-        setattr(self, '_'+field, prop_list)

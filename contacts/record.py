@@ -1,8 +1,9 @@
 from datetime import datetime, date
-from common.validators import email, phone
+from common import Item
+from common.validators import email as email_validator, phone as phone_validator
 
 
-class Record:
+class Record(Item):
     searchable_fields = {
         '': 'Everywhere',
         'full_name': 'Full name',
@@ -27,6 +28,11 @@ class Record:
         'emails': 'Emails',
         'phones': 'Phones',
         'address': 'Address',
+    }
+    
+    validators = {
+        'emails': email_validator,
+        'phones': phone_validator,
     }
 
     birthday_format = '%d.%m.%Y'
@@ -82,8 +88,7 @@ class Record:
 
     @property
     def full_name(self) -> str:
-        if self._first_name and self._last_name:
-            return self._first_name + ' ' + self._last_name
+        return self._first_name + ' ' + self._last_name
 
     @property
     def birthday(self) -> date:
@@ -109,7 +114,7 @@ class Record:
     def emails(self, value: str):
         if not value:
             return
-        if not email(value):
+        if not email_validator(value):
             raise ValueError
 
         self._emails.append(value)
@@ -122,7 +127,7 @@ class Record:
 
         if not old_email or idx < 0:
             return
-        if not email(new_email):
+        if not email_validator(new_email):
             raise ValueError
 
         self._emails[idx] = new_email
@@ -135,7 +140,7 @@ class Record:
     def phones(self, value: str):
         if not value:
             return
-        if not phone(value):
+        if not phone_validator(value):
             raise ValueError
 
         self._phones.append(value)
@@ -148,23 +153,7 @@ class Record:
 
         if not new_phone or idx < 0:
             return
-        if not phone(new_phone):
+        if not phone_validator(new_phone):
             raise ValueError
 
         self._phones[idx] = new_phone
-    
-    # TODO: add validation for new_value
-    def list_field_replace(self, field: str, old_value, new_value):
-        prop_list = getattr(self, '_'+field)
-        idx = prop_list.index(old_value)
-        
-        if not old_value or not new_value or idx < 0:
-            return
-        
-        prop_list[idx] = new_value
-        setattr(self, '_'+field, prop_list)
-    
-    def list_field_delete(self, field: str, value):
-        prop_list = getattr(self, '_'+field)
-        prop_list.remove(value)
-        setattr(self, '_'+field, prop_list)
