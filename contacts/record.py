@@ -149,7 +149,7 @@ class Record(Item):
 
         phones = value.split(",")
 
-        valid_phones = filter(lambda email: phone_validator(email), phones)
+        valid_phones = filter(lambda phone: phone_validator(phone), phones)
 
         if len(valid_phones) != len(phones):
             raise ValueError
