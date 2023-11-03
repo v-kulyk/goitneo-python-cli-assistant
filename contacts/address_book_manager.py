@@ -52,7 +52,7 @@ class AddressBookManager(BaseManager):
     def find_contact(self):
         self.user_interface.clear()
 
-        search_request = self.user_interface.get_search_request()
+        search_request = self.user_interface.get_search_request(Record.searchable_fields, Record.orderable_fields)
 
         records = self.book.find(search_request)
 

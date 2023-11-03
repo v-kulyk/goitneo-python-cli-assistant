@@ -9,6 +9,7 @@ from contacts import fill_demo_data as fill_demo_address_book
 from notes.notes_manager import NotesManager
 from notes.notes_book import NotesBook
 from notes.user_interfaces import CommandLineInterface as NotesCommandLineInterface
+from notes.demo import fill_demo_data as fill_demo_notes_book
 
 
 def createContactsContoller(is_demo):
@@ -22,12 +23,12 @@ def createContactsContoller(is_demo):
     )
 
 
-def createNotesContoller():
+def createNotesContoller(is_demo):
     return NotesManager(
         EntityStorage(
             entity_name='notes_book',
             entity_class=NotesBook,
-            # demo_filler=fill_demo_address_book if is_demo else None
+            demo_filler=fill_demo_notes_book if is_demo else None
         ),
         NotesCommandLineInterface('Notes', 'Note'),
     )
@@ -37,7 +38,7 @@ def main():
     is_demo = '--demo' in sys.argv
 
     if 'notes' in sys.argv:
-        controller = createNotesContoller()
+        controller = createNotesContoller(is_demo)
     elif 'contacts' in sys.argv:
         controller = createContactsContoller(is_demo)
     else:
@@ -48,7 +49,7 @@ def main():
                 controller = createContactsContoller(is_demo)
                 break
             elif user_input == '2':
-                controller = createNotesContoller()
+                controller = createNotesContoller(is_demo)
                 break
     try:
         controller.run()
