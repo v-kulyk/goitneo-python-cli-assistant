@@ -39,7 +39,7 @@ class NotesManager(BaseManager):
 
     def find_item(self) -> Note:
         self.user_interface.clear()
-        search_request = self.user_interface.get_search_request()
+        search_request = self.user_interface.get_search_request(Note.searchable_fields, Note.orderable_fields)
         items = self.book.find(search_request)
         self.user_interface.show_items(items)
         self.run()

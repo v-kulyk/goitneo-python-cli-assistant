@@ -15,19 +15,6 @@ class BaseManager:
 
         self.user_interface.clear()
 
-    def run(self):
-        method_idx = self.user_interface.choose(
-            list(self.methods.values()),
-            "[Notes]: what do you want to do ?",
-            "Please specify a valid action"
-        )
-
-        method_name = list(self.methods.keys())[method_idx]
-
-        method = getattr(self, method_name)
-
-        method()
-
     def _update_item_list(self, item: Item, field: str, label: str):
         current_value = getattr(item, field)
         action = self._get_list_action(label)
