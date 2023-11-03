@@ -4,7 +4,7 @@ from common import Item
 
 class Note(Item):
     searchable_fields = {
-        '': 'Everywhere',
+        #'': 'Everywhere',
         'title': 'Title',
         'description': 'Description',
     }

@@ -4,11 +4,12 @@ from notes.note import Note
 
 class NotesManager(BaseManager):
     methods = {
-        'find_item': 'Search',
-        'list_items': 'List all items',
-        'add_item': "New item",
-        'change_item': "Edit item",
-        'remove_item': "Delete item",
+        'list_items': 'List all notes',
+        'find_items': 'Search',
+        'filter_items': 'Filter by tag',        
+        'add_item': "New note",
+        'change_item': "Edit note",
+        'remove_item': "Delete note",
         'exit': 'Exit',
     }
 
@@ -26,7 +27,6 @@ class NotesManager(BaseManager):
         self.user_interface.clear()
         items = self.book.data.values()
         self.user_interface.show_items(items)
-
         self.run()
 
     def add_item(self):
@@ -37,10 +37,17 @@ class NotesManager(BaseManager):
         self.user_interface.item_added(item)
         self.run()
 
-    def find_item(self) -> Note:
+    def find_items(self) -> Note:
         self.user_interface.clear()
         search_request = self.user_interface.get_search_request(Note.searchable_fields, Note.orderable_fields)
         items = self.book.find(search_request)
+        self.user_interface.show_items(items)
+        self.run()
+
+    def filter_items(self) -> Note:
+        self.user_interface.clear()
+        tag = self.user_interface.get_filter_request(self.items)
+        items = self.items.filter(tag)
         self.user_interface.show_items(items)
         self.run()
 
