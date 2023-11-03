@@ -30,7 +30,7 @@ def createNotesContoller(is_demo):
             entity_class=NotesBook,
             demo_filler=fill_demo_notes_book if is_demo else None
         ),
-        NotesCommandLineInterface('Notes', 'Note'),
+        NotesCommandLineInterface(),
     )
 
 

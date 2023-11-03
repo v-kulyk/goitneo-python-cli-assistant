@@ -1,4 +1,3 @@
-
 class Item:
     searchable_fields = {}
     orderable_fields = {}
