@@ -1,29 +1,31 @@
 from collections import UserDict, defaultdict
 from contacts.record import Record
-from datetime import datetime, timedelta
-import calendar
+from common.search_request import SearchRequest
+from datetime import datetime
 
 
 class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data[record.id] = record
 
-    def find(self, name: str):
-        raise NotImplemented
+    def find(self, search_request: SearchRequest) -> list:
+        records = list(
+            filter(lambda r: search_request.is_found(r), self.data.values()))
+        return search_request.sort(records)
 
-    def delete(self, name: str):
-        raise NotImplemented
+    def delete(self, id):
+        self.data.pop(id)
 
-    def get_birthdays(self):
+    def get_birthdays(self, days):
         today = datetime.today().date()
 
         output_data = defaultdict(list)
 
-        for name in self.data:
-            if not self.data[name].birthday:
+        for record in self.data.values():
+            if not record.birthday:
                 continue
 
-            birthday = self.data[name].birthday.value
+            birthday = record.birthday
 
             celebration_date = birthday.replace(year=today.year)
 
@@ -33,22 +35,11 @@ class AddressBook(UserDict):
 
             delta_to_celebration = celebration_date - today
 
-            if delta_to_celebration.days >= 7:
+            if delta_to_celebration.days > days:
                 continue
 
-            if celebration_date.weekday() in [5, 6]:
-                celebration_date = celebration_date + \
-                    timedelta(days=7 - celebration_date.weekday())
+            output_data[celebration_date.strftime('%Y-%m-%d')].append(record)
 
-            output_data[celebration_date.weekday()].append(name)
             sorted(output_data)
 
-        output = []
-
-        for weekday_index in output_data.keys():
-            day_name = calendar.day_name[weekday_index]
-            celebrator_names = ", ".join(output_data.get(weekday_index))
-
-            output.append(f"{day_name}: {celebrator_names}")
-
-        return output
+        return output_data

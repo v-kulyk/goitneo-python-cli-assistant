@@ -1,39 +1,77 @@
+from datetime import datetime
+
+from common import SearchRequest
+from common import BaseInterface
+
 from contacts.record import Record
 
 
-class UserInterface:
-    def show_ations(self, actions: dict):
-        raise NotImplemented
+class CommandLineInterface(BaseInterface):
+    def new_contact(self):
+        record = Record()  # creating new instance of Record class
 
-    def new_record(self) -> Record:
-        raise NotImplemented
+        # get only public properties
+        writable_attributes = Record.fillable_fields
 
-    def contact_added(self):
-        raise NotImplemented
+        # for each public property we as user for input
+        for field, label in writable_attributes.items():
+            while True:
+                try:
+                    user_input = self.input(
+                        f"[New contact] Please specify `{label}`:")
+                    setattr(record, field, user_input)
+                except ValueError:
+                    self.error(f"Incorrect value for `{label}`")
+                else:
+                    break
 
-    def get_search_request(self):
-        raise NotImplemented
+        return record
 
-    def show_records(self, records: list):
-        raise NotImplemented
+    def contact_added(self, record: Record):
+        print(
+            f"[Contacts] Contact {record.full_name} was added to address book.")
 
-    def change_record(self, id, field, value):
-        raise NotImplemented
+    def select_contact(self, records: list) -> Record:
+        names = list(map(lambda r: r.full_name, records))
 
-    def show_birthdays(self):
-        raise NotImplemented
+        name_idx = self.choose(
+            names, "Select contact:", "Incorrect input, please select existing contact.")
 
+        return records[name_idx]
 
-class CommandLineInterface(UserInterface):
-    def show_actions(self, actions: list):
+    def contact_changed(self, record: Record):
+        print(f"Contact was changed:")
+        print(record)
+
+    def contact_removed(self):
+        print("Contact was removed.")
+
+    def get_search_request(self) -> SearchRequest:
+        return super().get_search_request(
+            searchable_fields=Record.searchable_fields,
+            orderable_fields=Record.orderable_fields
+        )
+
+    def get_birthdays_interval(self) -> int:
         while True:
-            prompt = "[Contacts]: what do you want to do ?\n"
-            for i in range(len(actions)):
-                prompt += f"[{i}]: {actions[i]}\n"
+            days = self.input(
+                '[Birthdays]: please, input the number of days')
 
-            action_index = int(input(prompt))
+            if days and days.isnumeric() and int(days) > 0:
+                return int(days)
 
-            if action_index in actions:
-                return actions[action_index]
+            print(self.error('Incorrect number of days provided'))
 
-            print("Please specify valid action")
+    def show_birthdays(self, birthdays: dict):
+        if not len(birthdays):
+            print('No birthdays found.')
+
+        for date_str, records in birthdays.items():
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            print(date.strftime(Record.birthday_format + ' (%A)'))
+
+            for record in records:
+                years = date.year - record.birthday.year
+                print(f"{record.full_name} ({years} years)")
+
+            print('')
