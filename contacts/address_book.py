@@ -1,6 +1,6 @@
 from collections import UserDict, defaultdict
 from contacts.record import Record
-from contacts.search_request import SearchRequest
+from common.search_request import SearchRequest
 from datetime import datetime
 
 

@@ -1,9 +1,11 @@
 import sys
 
-from contacts.address_book_manager import AddressBookManager
-from contacts.address_book import AddressBook
-from contacts.user_interfaces import CommandLineInterface
-from contacts.address_book_storage import AddressBookStorage
+from common import EntityStorage
+
+from contacts import AddressBookManager
+from contacts import AddressBook
+from contacts import CommandLineInterface
+from contacts import fill_demo_data as fill_demo_address_book
 
 from notes.notes_manager import NotesManager
 from notes.notes_book import NotesBook
@@ -18,8 +20,12 @@ def main():
                                user_interface=NotesCommandLineInterface())
     else:
         manager = AddressBookManager(
-            AddressBookStorage(book_name='address_book', is_demo=is_demo),
-            CommandLineInterface(),
+            EntityStorage(
+                entity_name='address_book',
+                entity_class=AddressBook,
+                demo_filler=fill_demo_address_book if is_demo else None
+            ),
+            CommandLineInterface()
         )
 
     try:
