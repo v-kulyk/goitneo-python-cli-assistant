@@ -12,14 +12,14 @@ class NotesBook(UserDict):
         items = list(
             filter(lambda r: search_request.is_found(r), self.data.values()))
         return search_request.sort(items)
-    
+
     def filter(self, tag):
         items = []
         for item in self.data.values():
             if tag in item.tags:
                 items.append(item)
         return items
-    
+
     def get_all_tags(self):
         tags = []
         for item in self.data.values():

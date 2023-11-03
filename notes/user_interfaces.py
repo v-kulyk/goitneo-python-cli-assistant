@@ -7,7 +7,7 @@ from os import system
 
 class CommandLineInterface(BaseInterface):
     def __init__(self) -> None:
-        self.items_title = 'Notes' 
+        self.items_title = 'Notes'
         self.item_title = 'Note'
 
     def new_item(self):
@@ -49,16 +49,16 @@ class CommandLineInterface(BaseInterface):
     def item_removed(self):
         print("{self.item_title} was removed.")
 
-    def get_filter_request(self, items):       
-        all_tags = items.get_all_tags();
+    def get_filter_request(self, items):
+        all_tags = items.get_all_tags()
         while True:
             choice = self.choose(
-                    all_tags,
-                    'Choose tag for filter:',
-                    'Incorrect input',
-                    0,
-                )
+                all_tags,
+                'Choose tag for filter:',
+                'Incorrect input',
+                0,
+            )
             if choice is None:
-                continue       
+                continue
 
-            return all_tags[choice]    
+            return all_tags[choice]
