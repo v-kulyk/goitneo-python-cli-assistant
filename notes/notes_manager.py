@@ -47,8 +47,8 @@ class NotesManager(BaseManager):
 
     def filter_items(self) -> Note:
         self.user_interface.clear()
-        tag = self.user_interface.get_filter_request(self.items)
-        items = self.items.filter(tag)
+        tag = self.user_interface.get_filter_request(self.book)
+        items = self.book.filter(tag)
         self.user_interface.show_items(items)
         self.run()
 

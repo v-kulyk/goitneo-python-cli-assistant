@@ -18,15 +18,14 @@ class Record(Item):
         'full_name': 'Full name',
         'first_name': 'First name',
         'last_name': 'Last name',
-        'id': 'ID',
     }
 
     fillable_fields = {
         'first_name': 'First name',
         'last_name': 'Last name',
-        'birthday': "Date of birth",
-        'emails': 'Emails',
-        'phones': 'Phones',
+        'birthday': "Date of birth (dd.mm.yyyy)",
+        'emails': 'Emails (comma-separated)',
+        'phones': 'Phones (comma-separated, format: only numbers optionally starting with "+" sign)',
         'address': 'Address',
     }
     
@@ -96,6 +95,9 @@ class Record(Item):
 
     @birthday.setter
     def birthday(self, value: str):
+        if not value:
+            return
+
         self._birthday = datetime.strptime(value, self.birthday_format).date()
 
     @property
@@ -117,7 +119,7 @@ class Record(Item):
 
         emails = value.split(",")
 
-        valid_emails = filter(lambda email: email_validator(email), emails)
+        valid_emails = list(filter(lambda email: email_validator(email), emails))
 
         if len(valid_emails) != len(emails):
             raise ValueError
@@ -149,7 +151,7 @@ class Record(Item):
 
         phones = value.split(",")
 
-        valid_phones = filter(lambda phone: phone_validator(phone), phones)
+        valid_phones = list(filter(lambda phone: phone_validator(phone), phones))
 
         if len(valid_phones) != len(phones):
             raise ValueError

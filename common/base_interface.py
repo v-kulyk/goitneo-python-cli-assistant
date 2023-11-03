@@ -9,15 +9,15 @@ class BaseInterface:
         return input(prompt + "\n>")
 
     def choose(self, choice_options: list, prompt: str, err_msg: str, default=None) -> str:
-        prompt = prompt + "\n"
 
         self.__set_completer(choice_options)
 
         while True:
+            prompt_combined = prompt + "\n"
             for i in range(len(choice_options)):
-                prompt += f"[{i+1}]: {choice_options[i]}\n"
+                prompt_combined += f"[{i+1}]: {choice_options[i]}\n"
 
-            user_input = self.input(prompt)
+            user_input = self.input(prompt_combined)
 
             if not user_input and not default is None:
                 self.__unset_completer()

@@ -36,9 +36,15 @@ class BaseManager:
                 "Please select a valid entry."
             )
             old_entry = current_value[idx]
-            new_entry = self.user_interface.input(
-                f"Enter replacement for {old_entry}:")
-            item.list_field_replace(field, old_entry, new_entry)
+
+            while True:
+                new_entry = self.user_interface.input(
+                    f"Enter replacement for {old_entry}:")
+                try:
+                    item.list_field_replace(field, old_entry, new_entry)
+                    return
+                except ValueError:
+                    self.user_interface.error(f"Please enter valid value")
 
     def _get_list_action(self, label: str) -> str:
         actions = {

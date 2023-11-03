@@ -1,8 +1,5 @@
-from common import BaseInterface, SearchRequest
+from common import BaseInterface
 from notes.note import Note
-from notes.notes_book import NotesBook
-from common.search_request import SearchRequest
-from os import system
 
 
 class CommandLineInterface(BaseInterface):
@@ -47,7 +44,7 @@ class CommandLineInterface(BaseInterface):
         print(item)
 
     def item_removed(self):
-        print("{self.item_title} was removed.")
+        print(f"{self.item_title} was removed.")
 
     def get_filter_request(self, items):
         all_tags = items.get_all_tags()

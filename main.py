@@ -1,4 +1,5 @@
 import sys
+from os import system
 
 from common import EntityStorage
 from contacts import AddressBookManager
@@ -35,6 +36,7 @@ def createNotesContoller(is_demo):
 
 
 def main():
+    system('clear')
     is_demo = '--demo' in sys.argv
 
     if 'notes' in sys.argv:
@@ -43,8 +45,13 @@ def main():
         controller = createContactsContoller(is_demo)
     else:
         while True:
-            user_input = input(
-                "Choose application:\n[1]: contacts\n[2]: notes\n")
+            try:
+                user_input = input(
+                    "Choose application:\n[1]: contacts\n[2]: notes\n")
+            except KeyboardInterrupt:
+                print("Bye.")
+                return
+
             if user_input == '1':
                 controller = createContactsContoller(is_demo)
                 break

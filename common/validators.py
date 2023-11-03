@@ -6,4 +6,4 @@ def email(value: str):
 
 
 def phone(value: str) -> bool:
-    return bool(re.fullmatch(r"^[+]?[1-9][0-9]{7,14}$", value))
+    return bool(re.fullmatch(r"^[+]?\d{10,14}$", value))

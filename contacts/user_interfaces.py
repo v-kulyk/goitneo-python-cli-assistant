@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from common import SearchRequest
 from common import BaseInterface
 
-from contacts.record import Record
+from contacts import Record
 
 
 class CommandLineInterface(BaseInterface):

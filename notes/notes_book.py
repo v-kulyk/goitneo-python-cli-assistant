@@ -1,7 +1,6 @@
-from collections import UserDict, defaultdict
+from collections import UserDict
 from notes.note import Note
 from common.search_request import SearchRequest
-from datetime import datetime, timedelta
 
 
 class NotesBook(UserDict):

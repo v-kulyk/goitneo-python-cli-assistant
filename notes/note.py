@@ -4,7 +4,7 @@ from common import Item
 
 class Note(Item):
     searchable_fields = {
-        # '': 'Everywhere',
+        '': 'Everywhere',
         'title': 'Title',
         'description': 'Description',
     }
@@ -13,13 +13,12 @@ class Note(Item):
         'title': 'Title',
         'description': 'Description',
         'created_at': 'Date',
-        'id': 'ID',
     }
 
     fillable_fields = {
         'title': 'Title',
         'description': 'Description',
-        'tags': 'Tags',
+        'tags': 'Tags (comma-separated)',
     }
 
     validators = {
@@ -94,3 +93,7 @@ class Note(Item):
             return
 
         self._tags[idx] = new_tag
+        
+    @property
+    def created_at(self):
+        return self.__created_at
