@@ -3,6 +3,7 @@ from os import system
 from common.completer import Completer
 from common.search_request import SearchRequest
 
+
 class BaseInterface:
     def input(self, prompt):
         return input(prompt + "\n>")
@@ -36,9 +37,8 @@ class BaseInterface:
             self.__unset_completer()
 
             self.error(err_msg)
-            
-    
-    def get_search_request(self, searchable_fields:dict, orderable_fields:dict) -> SearchRequest:
+
+    def get_search_request(self, searchable_fields: dict, orderable_fields: dict) -> SearchRequest:
         search_request = SearchRequest()
 
         while True:
@@ -80,19 +80,19 @@ class BaseInterface:
                 continue
 
             return search_request
-    
+
     def error(self, msg: str):
         print("[ERROR]: " + msg + "\n")
 
-    def show_records(self, records: list):
+    def show_items(self, items: list):
         print('')
 
-        if not records:
-            print('No records found')
+        if not items:
+            print('No items found\n')
             return
 
-        for record in records:
-            print(record)
+        for item in items:
+            print(item)
             print('')
 
     def clear(self):
