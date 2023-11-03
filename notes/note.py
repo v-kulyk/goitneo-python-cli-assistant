@@ -78,7 +78,11 @@ class Note(Item):
     def tags(self, value: str):
         if not value:
             return
-        self._tags.append(value)
+
+        tags = value.split(",")
+
+        self._tags.extend(tags)
+        self._tags.sort()
 
     def remove_tag(self, value: str):
         self._tags.remove(value)

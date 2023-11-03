@@ -114,10 +114,16 @@ class Record(Item):
     def emails(self, value: str):
         if not value:
             return
-        if not email_validator(value):
+
+        emails = value.split(",")
+
+        valid_emails = filter(lambda email: email_validator(email), emails)
+
+        if len(valid_emails) != len(emails):
             raise ValueError
 
-        self._emails.append(value)
+        self._emails.extend(valid_emails)
+        self._emails.sort()
 
     def remove_email(self, email: str):
         self._emails.remove(email)
@@ -140,10 +146,16 @@ class Record(Item):
     def phones(self, value: str):
         if not value:
             return
-        if not phone_validator(value):
+
+        phones = value.split(",")
+
+        valid_phones = filter(lambda email: phone_validator(email), phones)
+
+        if len(valid_phones) != len(phones):
             raise ValueError
 
-        self._phones.append(value)
+        self._phones.extend(valid_phones)
+        self._phones.sort()
 
     def remove_phone(self, phone: str):
         self._phones.remove(phone)
