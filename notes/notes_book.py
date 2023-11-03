@@ -11,9 +11,8 @@ class NotesBook(UserDict):
         self.data[item.id] = item
 
     def find(self, search_request: SearchRequest) -> list:
-        notes = list(
-            filter(lambda r: search_request.is_found(r), self.data.values()))
-        return search_request.sort(notes)
+        items = list(filter(lambda r: search_request.is_found(r), self.data.values()))
+        return search_request.sort(items)
 
     def delete(self, id):
         self.data.pop(id)

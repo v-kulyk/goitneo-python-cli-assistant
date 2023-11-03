@@ -1,5 +1,4 @@
 from notes.notes_book import NotesBook
-
 import pickle
 
 class Storage():

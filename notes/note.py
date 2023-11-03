@@ -1,6 +1,4 @@
 from datetime import datetime
-from contacts.validators import email, phone
-
 
 class Note:
     searchable_fields = {
@@ -16,6 +14,11 @@ class Note:
         'id': 'ID',
     }
 
+    fillable_fields = {
+        'title': 'Title',
+        'description': 'Description',
+        'tags': 'Tags',        
+    }
     def __init__(self) -> None:
         self.__id = id(self)
         self.__created_at = datetime.now()
@@ -68,21 +71,34 @@ class Note:
     @tags.setter
     def tags(self, value: str):
         if not value:
-            return   
+            return
         self._tags.append(value)
 
     def remove_tag(self, value: str):
         self._tags.remove(value)
 
+    def replace_tag(self, old_tag: str, new_tag: str):
+        idx = self._tags.index(old_tag)
 
-    def get_writable_attributes(self):
-        # get all attributes (properties and methods) of the instance
-        attributes = dir(self)
-        # get only public properties
-        writable_attributes = []
-        for attr in attributes:
-            if callable(getattr(self, attr)) or attr.startswith("_") or  attr in ['id', 'orderable_fields', 'searchable_fields']:
-                continue
+        if not old_tag or idx < 0:
+            return
+    
+        self._tags[idx] = new_tag
 
-            writable_attributes.append(attr)
-        return writable_attributes
+
+
+    def list_field_replace(self, field: str, old_value, new_value):
+        prop_list = getattr(self, '_'+field)
+        idx = prop_list.index(old_value)
+        
+        if not old_value or not new_value or idx < 0:
+            return
+        
+        prop_list[idx] = new_value
+        setattr(self, '_'+field, prop_list)
+    
+    
+    def list_field_delete(self, field: str, value):
+        prop_list = getattr(self, '_'+field)
+        prop_list.remove(value)
+        setattr(self, '_'+field, prop_list)
