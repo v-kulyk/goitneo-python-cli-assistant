@@ -2,7 +2,7 @@ from datetime import datetime
 
 class Note:
     searchable_fields = {
-        '': 'Everywhere',
+        #'': 'Everywhere',
         'title': 'Title',
         'description': 'Description',
     }

@@ -1,6 +1,6 @@
 from notes.note import Note
 from notes.notes_book import NotesBook
-from contacts.search_request import SearchRequest
+from common.search_request import SearchRequest
 from os import system
 from datetime import datetime
 
@@ -130,6 +130,21 @@ class CommandLineInterface(UserInterface):
                 continue
 
             return search_request
+
+    def get_filter_request(self, items):       
+        all_tags = items.get_all_tags();
+        while True:
+            choice = self.choose(
+                    all_tags,
+                    'Choose tag for filter:',
+                    'Incorrect input',
+                    0,
+                )
+            if choice is None:
+                continue       
+
+            return all_tags[choice]    
+    
 
     def show_items(self, items: list):
         print('')
