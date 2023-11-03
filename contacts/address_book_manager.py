@@ -1,6 +1,7 @@
+from common import EntityStorage
+
 from contacts.record import Record
-from contacts.user_interfaces import UserInterface
-from contacts.address_book_storage import AddressBookStorage
+from contacts.user_interfaces import CommandLineInterface
 
 from datetime import date, datetime
 
@@ -16,7 +17,7 @@ class AddressBookManager:
         'exit': 'Exit',
     }
 
-    def __init__(self, storage: AddressBookStorage, user_interface: UserInterface) -> None:
+    def __init__(self, storage: EntityStorage, user_interface: CommandLineInterface) -> None:
         self.address_book = storage.load()
 
         self.user_interface = user_interface
@@ -54,13 +55,13 @@ class AddressBookManager:
 
         self.address_book.add_record(record=record)
 
-        self.storage.save(address_book=self.address_book)
+        self.storage.save(entity=self.address_book)
 
         self.user_interface.contact_added(record)
 
         self.run()
 
-    def find_contact(self) -> Record:
+    def find_contact(self):
         self.user_interface.clear()
 
         search_request = self.user_interface.get_search_request()
@@ -99,7 +100,7 @@ class AddressBookManager:
             message = f"[Change contact] Please specify new value for {label}: {current_value}"
             self._set_record_value(record, field, label, message)
 
-        self.storage.save(address_book=self.address_book)
+        self.storage.save(entity=self.address_book)
 
         self.user_interface.contact_changed(record)
 
@@ -113,7 +114,7 @@ class AddressBookManager:
 
         self.address_book.delete(record.id)
 
-        self.storage.save(address_book=self.address_book)
+        self.storage.save(entity=self.address_book)
 
         self.user_interface.contact_removed()
 
