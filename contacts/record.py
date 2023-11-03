@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from contacts.validators import email, phone
+from common.validators import email, phone
 
 
 class Record:
